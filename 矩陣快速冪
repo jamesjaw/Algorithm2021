@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdio>
+
+using namespace std;
+
+//怎麼這麼難＝＝
+typedef struct GG{
+    long long z1;
+    long long z2;
+    long long z3;
+    long long z4;
+}gg;
+gg cfun(gg e,gg f){
+    gg c;
+    c.z1 = ((e.z1%1000000007 * f.z1%1000000007 )%1000000007+ (e.z2%1000000007 * f.z3%1000000007)%1000000007)%1000000007;
+    c.z2 = ((e.z1%1000000007 * f.z2%1000000007 )%1000000007+ (e.z2%1000000007 * f.z4%1000000007)%1000000007)%1000000007;
+    c.z3 = ((e.z3%1000000007 * f.z1%1000000007 )%1000000007+ (e.z4%1000000007 * f.z3%1000000007)%1000000007)%1000000007;
+    c.z4 = ((e.z3%1000000007 * f.z2%1000000007 )%1000000007+ (e.z4%1000000007 * f.z4%1000000007)%1000000007)%1000000007;
+    return c;
+}
+gg qsm(long long n,long long x,long long y){
+    gg ans; ans.z1 = x; ans.z2 = y; ans.z3 = 1; ans.z4 = 0;
+    if(n==1) return ans;
+    if(n%2==1){
+        return cfun(ans, qsm(n-1,x,y));
+    }
+    else{
+        gg temp = qsm(n/2,x,y);
+        return cfun(temp,temp);
+    }
+}
+
+int main(){
+    int m;
+    cin>>m;
+    while(m--){
+        long long a1,a2,x,y,n;
+        cin>>a1>>a2>>x>>y>>n;
+        if(n==1) cout<<a1;
+        else if(n==2) cout<<a2;
+        else{
+            gg anw;
+            anw = qsm(n-2,x,y);
+            int fan = ((anw.z1%1000000007*a2%1000000007)%1000000007+(anw.z2%1000000007*a1%1000000007)%1000000007)%1000000007;
+            cout<<fan<<"\n";
+        }
+    }
+    return 0;
+}
