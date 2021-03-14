@@ -1,0 +1,53 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int cmp(const void* a,const void*b){
+    return *(int*)a>*(int*)b;
+}
+int main(){
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    
+    int n;
+    cin>>n;
+    int* arr = new int[n];
+    int* cor = new int[n];
+    int flag = 0;
+    int count = 0;
+    int sort  = 0;
+    for(int i=0;i<n;i++) {
+        cin>>arr[i];
+        cor[i] = arr[i];
+    }
+    int s = n;
+    while(sort == 0){
+        sort = 1;
+        for(int i=0;i<s-2;i++){
+            if(arr[i]>arr[i+2]){
+                sort = 0;
+                count++;
+                int temp = arr[i];
+                arr[i] = arr[i+2];
+                arr[i+2] = temp;
+            }
+            
+        }
+        s = s-2;
+    }
+    qsort(cor, n, sizeof(int), cmp);
+    for(int i=0;i<n;i++){
+        if(cor[i]!=arr[i]){
+            flag = 1;
+            break;
+        }
+    }
+    if(flag==1){
+        cout<<"no\n"<<count<<"\n";
+    }
+    else{
+        cout<<"yes\n"<<count<<"\n";
+    }
+    delete [] arr;
+    delete [] cor;
+    return 0;
+}
