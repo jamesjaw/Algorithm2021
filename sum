@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+int main(){
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    int n;
+    cin>>n;
+    n *=2;
+    long long* ar = new long long[n];
+    int* rec = new int[n];
+    long long count = 0;
+    for(int i=0;i<n;i++){
+        cin>>ar[i];
+        rec[i] = 0;
+    }
+    for(int i=0;i<n-1;i++){
+        if(rec[i]==1) continue;
+        rec[i] = 1;
+            for(int j=i+1;j<n;j++){
+                if(ar[i]==ar[j]){
+                    rec[j] = 1;
+                    break;
+                }
+                else{
+                    if(ar[i]>ar[j]){
+                        count += ar[j];
+                    }
+                }
+            }
+        
+    }
+    cout<<count<<"\n";
+    
+    return 0;
+}
