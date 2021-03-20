@@ -1,36 +1,76 @@
 #include <iostream>
+#define max 2147483647;
 using namespace std;
+class myint{
+public:
+    int num;
+    long long count;
+};
+void cob(myint* arr,int a,int b,int mid){
+    int size1 = mid-a+1;
+    int size2 = b-mid;
+    myint* s1 = new myint[size1+1];
+    myint* s2 = new myint[size2+1];
+    for(int i=0;i<size1;i++){
+        s1[i].num = arr[a+i].num;
+        s1[i].count = arr[a+i].count;
+    }
+    for(int i=0;i<size2;i++){
+        s2[i].num = arr[mid+1+i].num;
+        s2[i].count = arr[mid+1+i].count;
+    }
+    s1[size1].num = max;
+    s2[size2].num = max;
+    int R = 0;
+    int L = 0;
+    long long fu=0;
+    for(int z=a;z<=b;z++){
+        if(s1[R].num<s2[L].num){
+            fu += s1[R].num;
+            arr[z].num = s1[R].num;
+            arr[z].count = s1[R].count;
+            R++;
+        }
+        else if(s2[L].num<=s1[R].num){
+            arr[z].num = s2[L].num;
+            s2[L].count += fu;
+            arr[z].count = s2[L].count;
+            L++;
+           
+        }
+    }
+    delete [] s1;
+    delete [] s2;
+}
+void ms(myint* arr,int a,int b){
+    int mid = (a+b)/2;
+    if(a<b){
+        ms(arr,a,mid);
+        ms(arr,mid+1,b);
+        cob(arr,a,b,mid);
+    }
+}
 
 int main(){
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
     int n;
     cin>>n;
-    n *=2;
-    long long* ar = new long long[n];
-    int* rec = new int[n];
-    long long count = 0;
-    for(int i=0;i<n;i++){
-        cin>>ar[i];
-        rec[i] = 0;
-    }
-    for(int i=0;i<n-1;i++){
-        if(rec[i]==1) continue;
-        rec[i] = 1;
-            for(int j=i+1;j<n;j++){
-                if(ar[i]==ar[j]){
-                    rec[j] = 1;
-                    break;
-                }
-                else{
-                    if(ar[i]>ar[j]){
-                        count += ar[j];
-                    }
-                }
-            }
-        
-    }
-    cout<<count<<"\n";
+    n = n*2;
+    myint* arr = new myint[n];
     
+    for(int i=0;i<n;i++){
+        cin>>arr[i].num;
+        arr[i].count = 0;
+    }
+    
+    ms(arr,0,n-1);
+    
+    long long anw=0;
+    for(int i=0;i<n;i++){
+        if(i%2==0) anw += arr[i].count;
+        else anw -= arr[i].count;
+    }
+    //for(int i=0;i<n;i++) cout<<arr[i].count;
+    cout<<anw<<"\n";
+    delete [] arr;
     return 0;
 }
