@@ -1,53 +1,97 @@
 #include <iostream>
-#include <algorithm>
+#define max 2147483647;
 using namespace std;
-int cmp(const void* a,const void*b){
-    return *(int*)a>*(int*)b;
+
+void cob(int* arr,int a,int b,int mid,long long*count){
+    int size1 = mid-a+1;
+    int size2 = b-mid;
+    int* s1 = new int[size1+1];
+    int* s2 = new int[size2+1];
+    for(int i=0;i<size1;i++){
+        s1[i] = arr[a+i];
+    }
+    for(int i=0;i<size2;i++){
+        s2[i] = arr[mid+1+i];
+    }
+    s1[size1] = max;
+    s2[size2] = max;
+    int R = 0;
+    int L = 0;
+    for(int z=a;z<=b;z++){
+        if(s1[R]<=s2[L]){
+            arr[z] = s1[R];
+            R++;
+        }
+        else if(s2[L]<s1[R]){
+            arr[z] = s2[L];
+            L++;
+            *count = *count+size1-R;
+        }
+    }
+    delete [] s1;
+    delete [] s2;
 }
+void ms(int* arr,int a,int b,long long* c){
+    int mid = (a+b)/2;
+    if(a<b){
+        ms(arr,a,mid,c);
+        ms(arr,mid+1,b,c);
+        cob(arr,a,b,mid,c);
+    }
+}
+
 int main(){
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
     
     int n;
     cin>>n;
-    int* arr = new int[n];
-    int* cor = new int[n];
+    int* arr1 = new int[n%2==1? (n/2)+1 : n/2];
+    int* arr2 = new int[n/2];
     int flag = 0;
-    int count = 0;
-    int sort  = 0;
-    for(int i=0;i<n;i++) {
-        cin>>arr[i];
-        cor[i] = arr[i];
+    int i = 0;
+    for(;i<n/2;i++){
+        cin>>arr1[i]>>arr2[i];
     }
-    int s = n;
-    while(sort == 0){
-        sort = 1;
-        for(int i=0;i<s-2;i++){
-            if(arr[i]>arr[i+2]){
-                sort = 0;
-                count++;
-                int temp = arr[i];
-                arr[i] = arr[i+2];
-                arr[i+2] = temp;
-            }
-            
+
+    if(n%2==1){
+        cin>>arr1[i];
+    }
+    
+    int a2size = n/2;
+    int a1size = n%2==1?n/2 + 1 : n/2;
+    long long* count = new long long;
+    *count = 0;
+    ms(arr1,0,a1size-1,count);
+    ms(arr2,0,a2size-1,count);
+    
+
+    int s = n%2==1?n/2:n/2-1;
+    int z =0;
+    for(;z<s;z++){
+        if(arr1[z]>arr2[z]){
+            flag = 1;
+            break;
         }
-        s = s-2;
-    }
-    qsort(cor, n, sizeof(int), cmp);
-    for(int i=0;i<n;i++){
-        if(cor[i]!=arr[i]){
+        if(arr2[z]>arr1[z+1]){
             flag = 1;
             break;
         }
     }
+    if(n%2==0){
+        if(arr1[n/2]>arr2[n/2]){
+            flag = 1;
+        }
+    }
     if(flag==1){
-        cout<<"no\n"<<count<<"\n";
+        cout<<"no\n"<<*count<<"\n";
     }
     else{
-        cout<<"yes\n"<<count<<"\n";
+        cout<<"yes\n"<<*count<<"\n";
     }
-    delete [] arr;
-    delete [] cor;
+    delete [] arr1;
+    delete [] arr2;
     return 0;
 }
+
+
