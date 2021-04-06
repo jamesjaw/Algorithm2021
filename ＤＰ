@@ -1,0 +1,41 @@
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    int n,w;
+    cin>>n>>w;
+    int* wa = new int[n+1];
+    int* va = new int[n+1];
+    int ar[2][10001];
+    for(int i=0;i<2;i++) ar[i][0] = 0;
+    for(int i=0;i<10001;i++) ar[0][i] = 0;
+    for(int i=1;i<=n;i++) cin>>wa[i]>>va[i];
+    for(int i=1;i<=n;i++){
+        for(int j=1;j<=w;j++){
+            if(i%2==1){
+                if(j-wa[i]>=0){
+                ar[1][j] = ar[0][j-wa[i]]+va[i] > ar[0][j] ? ar[0][j-wa[i]]+va[i] : ar[0][j];
+                }
+                else{
+                    ar[1][j] = ar[0][j];
+                }
+            }
+            else{
+                if(j-wa[i]>=0){
+                ar[0][j] = ar[1][j-wa[i]]+va[i] > ar[1][j] ? ar[1][j-wa[i]]+va[i] : ar[1][j];
+                }
+                else{
+                    ar[0][j] = ar[1][j];
+                }
+            }
+        }
+    }
+    
+    if(n%2==1) cout<<ar[1][w]<<"\n";
+    else cout<<ar[0][w]<<"\n";
+    //for(int i=0;i<=w;i++) cout<<ar[1][i]<<" ";
+    delete [] wa;
+    delete [] va;
+    return 0;
+}
